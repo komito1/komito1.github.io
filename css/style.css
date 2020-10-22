@@ -1,4 +1,7 @@
 body {
   background-image: url(../img/bg.jpg);
-  
+}
+.main{
+  text-align: center;
+  padding-top: 250px
 }
