@@ -1,3 +1,4 @@
-.background {
-  url='img/메인배경.jpg'
+body {
+  background-image: url(../img/bg.jpg);
+  
 }
