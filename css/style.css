@@ -22,3 +22,5 @@ body {
   left: auto;
   right: 80px;
 }
+. display:flex;
+  align-items:center;
