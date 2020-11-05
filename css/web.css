@@ -1,3 +1,10 @@
 body {
-  background-image: url(../img/web bg.jpg);
+  background-image: url(../img/webbg.jpg);
+}
+
+.web{
+  text-align: center;
+}
+.card-text{
+  
 }
