@@ -2,9 +2,6 @@ body {
   background-image: url(../img/webbg.jpg);
 }
 
-.web{
-  text-align: center;
-}
-.card-text{
-  
+.hd{
+  font-size: 4rem
 }
