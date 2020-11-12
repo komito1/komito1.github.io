@@ -24,3 +24,7 @@ body {
 }
 . display:flex;
   align-items:center;
+
+.exampleModal{
+background-image: url(../img/modalbg.jpg);
+}
