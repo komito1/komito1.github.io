@@ -31,7 +31,7 @@ background-image: url(../img/modalbg.jpg);
 
 @media (max-width:660px) {
   .main img {
-    width: 300px;
+    width: 250px;
   }
   h2 {
     font-size: 18px;
