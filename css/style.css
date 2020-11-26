@@ -28,3 +28,9 @@ body {
 .exampleModal{
 background-image: url(../img/modalbg.jpg);
 }
+
+@media (max-width:480px) {
+  .main img {
+    width: 300px;
+  }
+}
