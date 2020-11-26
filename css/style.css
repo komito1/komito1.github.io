@@ -29,7 +29,7 @@ body {
 background-image: url(../img/modalbg.jpg);
 }
 
-@media (max-width:768px) {
+@media (max-width:660px) {
   .main img {
     width: 300px;
   }
