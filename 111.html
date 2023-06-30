@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            width: 220px;
+            margin: 0 auto;
+        }
+        .color-box {
+            width: 40px;
+            height: 40px;
+            margin: 5px;
+        }
+        .selected-colors {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .selected-color {
+            width: 40px;
+            height: 40px;
+            margin: 5px;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                width: 180px;
+            }
+            .color-box {
+                width: 30px;
+                height: 30px;
+            }
+        }
+        
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .container {
+                width: 320px;
+            }
+            .color-box {
+                width: 70px;
+                height: 70px;
+            }
+        }
+        
+        @media (min-width: 1025px) {
+            .container {
+                width: 440px;
+            }
+            .color-box {
+                width: 100px;
+                height: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h3 style="text-align:center">원하는 색을 3가지 골라주세요</h3>
+    <div class="container">
+        <div class="color-box" style="background-color:#ff0000" onclick="selectColor('#ff0000')"></div>
+        <div class="color-box" style="background-color:#ff9500" onclick="selectColor('#ff9500')"></div>
+        <div class="color-box" style="background-color:#ffff00" onclick="selectColor('#ffff00')"></div>
+        <div class="color-box" style="background-color:#00b92b" onclick="selectColor('#00b92b')"></div>
+        <div class="color-box" style="background-color:#0076c0" onclick="selectColor('#0076c0')"></div>
+        <div class="color-box" style="background-color:#7030a0" onclick="selectColor('#7030a0')"></div>
+        <div class="color-box" style="background-color:#ff33ff" onclick="selectColor('#ff33ff')"></div>
+        <div class="color-box" style="background-color:#00ffcc" onclick="selectColor('#00ffcc')"></div>
+    </div>
+    <div class="selected-colors">
+        <div id="selected-color-1" class="selected-color"></div>
+        <div id="selected-color-2" class="selected-color"></div>
+        <div id="selected-color-3" class="selected-color"></div>
+    </div>
+    <button onclick="reset()">선택해제</button>
+
+    <script>
+        let selectedColors = [];
+        
+        function selectColor(color) {
+            if (selectedColors.length < 3) {
+                selectedColors.push(color);
+                document.getElementById(`selected-color-${selectedColors.length}`).style.backgroundColor = color;
+            }
+        }
+        
+        function reset() {
+            selectedColors = [];
+            document.getElementById('selected-color-1').style.backgroundColor = 'transparent';
+            document.getElementById('selected-color-2').style.backgroundColor = 'transparent';
+            document.getElementById('selected-color-3').style.backgroundColor = 'transparent';
+        }
+    </script>
+</body>
+</html>
