@@ -1,29 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Modal Example</title>
-<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Selector</title>
+  <style>
+    /* CSS 스타일 */
+    .color {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin: 10px;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    .modal {
+      display: none; /* 모달 초기에는 숨김 */
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgb(0,0,0);
+      background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+    }
+
+    .close {
+      color: #aaaaaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
 
-<button class="modal-button" data-color="#ff0000">Red</button>
-<button class="modal-button" data-color="#ff9500">Orange</button>
-<button class="modal-button" data-color="#ffff00">Yellow</button>
-<button class="modal-button" data-color="#00b92b">Green</button>
-<button class="modal-button" data-color="#0076c0">Blue</button>
-<button class="modal-button" data-color="#7030a0">Purple</button>
-<button class="modal-button" data-color="#ff33ff">Pink</button>
-<button class="modal-button" data-color="#00ffcc">Mint</button>
+<div class="color" id="color1" style="background-color: #ff0000;"></div>
+<div class="color" id="color2" style="background-color: #ff9500;"></div>
+<div class="color" id="color3" style="background-color: #ffff00;"></div>
+<div class="color" id="color4" style="background-color: #00b92b;"></div>
+<div class="color" id="color5" style="background-color: #0076c0;"></div>
+<div class="color" id="color6" style="background-color: #7030a0;"></div>
+<div class="color" id="color7" style="background-color: #ff33ff;"></div>
+<div class="color" id="color8" style="background-color: #00ffcc;"></div>
 
 <div id="modal" class="modal">
-  <div class="modal-content">
+  <div id="modal-content" class="modal-content">
     <span class="close">&times;</span>
-    <div id="modal-text"></div>
+    <div id="color-description"></div>
   </div>
 </div>
 
-<script src="script.js"></script>
+<script>
+  // JavaScript 코드
+  const modal = document.getElementById('modal');
+  const modalContent = document.getElementById('modal-content');
+  const closeBtn = document.getElementsByClassName('close')[0];
+  const colors = document.querySelectorAll('.color');
+
+  let selectedColors = [];
+
+  colors.forEach(color => {
+    color.addEventListener('click', function() {
+      const colorId = this.id;
+      if (selectedColors.length < 3 && !selectedColors.includes(colorId)) {
+        selectedColors.push(colorId);
+        this.style.display = 'none';
+        if (selectedColors.length === 3) {
+          showModal(selectedColors);
+        }
+      }
+    });
+  });
+
+  function showModal(selectedColors) {
+    modal.style.display = 'block';
+    let description = '';
+    selectedColors.forEach((color, index) => {
+      description += `<h3>${index + 1}번째 색상</h3>`;
+      switch (color) {
+        case 'color1':
+          description += `
+            <p>빨간색</p>
+            <p>1번: 남들을 이끌어 가는 성격으로 리더쉽이 강하다...</p>
+            `;
+          break;
+        case 'color2':
+          description += `
+            <p>주황색</p>
+            <p>1번: 경쾌하고 낙천적이며 에너지가 넘치는 성격...</p>
+            `;
+          break;
+        // 다른 색상에 대한 설명도 추가
+      }
+    });
+    modalContent.innerHTML = description;
+  }
+
+  closeBtn.addEventListener('click', function() {
+    modal.style.display = 'none';
+  });
+
+  window.addEventListener('click', function(event) {
+    if (event.target === modal) {
+      modal.style.display = 'none';
+    }
+  });
+</script>
+
 </body>
 </html>
