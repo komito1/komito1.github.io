@@ -1,97 +1,155 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
-
- <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>색상 선택</title>
     <style>
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            width: 220px;
-            margin: 0 auto;
+        .color-card {
+            display: inline-block;
+            width: 200px;
+            height: 150px;
+            border-radius: 5px;
+            margin: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.5s ease;
         }
-        .color-box {
-            width: 40px;
-            height: 40px;
-            margin: 5px;
+
+        .color-card:hover {
+            background-color: lightgray;
         }
-        .selected-colors {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
+
+        .color-card.selected {
+            background-color: lightblue;
+            transform: rotate(360deg);
         }
-        .selected-color {
-            width: 40px;
-            height: 40px;
-            margin: 5px;
+
+        #selected-colors {
+            margin-top: 30px;
         }
-        
-        @media (max-width: 600px) {
-            .container {
-                width: 180px;
-            }
-            .color-box {
-                width: 30px;
-                height: 30px;
-            }
+
+        /* 모달 스타일 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
         }
-        
-        @media (min-width: 768px) and (max-width: 1024px) {
-            .container {
-                width: 320px;
-            }
-            .color-box {
-                width: 70px;
-                height: 70px;
-            }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 5px;
         }
-        
-        @media (min-width: 1025px) {
-            .container {
-                width: 440px;
-            }
-            .color-box {
-                width: 100px;
-                height: 100px;
-            }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <h3 style="text-align:center">원하는 색을 3가지 골라주세요</h3>
-    <div class="container">
-        <div class="color-box" style="background-color:#ff0000" onclick="selectColor('#ff0000')"></div>
-        <div class="color-box" style="background-color:#ff9500" onclick="selectColor('#ff9500')"></div>
-        <div class="color-box" style="background-color:#ffff00" onclick="selectColor('#ffff00')"></div>
-        <div class="color-box" style="background-color:#00b92b" onclick="selectColor('#00b92b')"></div>
-        <div class="color-box" style="background-color:#0076c0" onclick="selectColor('#0076c0')"></div>
-        <div class="color-box" style="background-color:#7030a0" onclick="selectColor('#7030a0')"></div>
-        <div class="color-box" style="background-color:#ff33ff" onclick="selectColor('#ff33ff')"></div>
-        <div class="color-box" style="background-color:#00ffcc" onclick="selectColor('#00ffcc')"></div>
+    <h1>색상 선택</h1>
+    <div class="color-card" data-color="pink" onclick="toggleColor('pink')">
+        <h2>핑크색</h2>
     </div>
-    <div class="selected-colors">
-        <div id="selected-color-1" class="selected-color"></div>
-        <div id="selected-color-2" class="selected-color"></div>
-        <div id="selected-color-3" class="selected-color"></div>
+    <div class="color-card" data-color="mint" onclick="toggleColor('mint')">
+        <h2>민트색</h2>
     </div>
-    <button onclick="reset()">선택해제</button>
+
+    <br><br>
+    <h2>선택된 색상:</h2>
+    <div id="selected-colors"></div>
+
+    <!-- 모달 -->
+    <div id="colorModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalColorName"></h2>
+            <p id="modalColorDescription"></p>
+        </div>
+    </div>
 
     <script>
         let selectedColors = [];
-        
-        function selectColor(color) {
-            if (selectedColors.length < 3) {
-                selectedColors.push(color);
-                document.getElementById(`selected-color-${selectedColors.length}`).style.backgroundColor = color;
+        const colorPersonality = {
+            // 각 색상에 대한 개인성 설명
+            pink: {
+                1: "친절하고 온화하고 사려깊은 사람이다. 이해하는 성숙함을 지녔고, 주위 사람들을 잘 이끌어주려고 노력한다. 다른 사람들과 협력하는 능력이 뛰어나고 상냥함과 순수함을 지니고 있다. 그러나 너무 주위사람들을 생각하는 나머지 자신의 일을 못하게 되어 자신의 희생이 커지게 되어 버리는 경향이 있다.",
+                2: "주고 받는 것 사이의 균형을 찾아야 한다. 다른 사람에게 지원과 협조를 주지만 정작 자신이 해야 하는 것에 대해 소홀해진 상황이다. 주는 것 만큼 받는 것도 가치 있다는 것을 배워야 하고, 나도 누군가에게 도움을 받는 입장이 되므로써 자신에게 양분을 제공해야 할 상황이다",
+                3: "육체의 추진력과 영적인 면들이 적절히 혼합되어야 하는 것이 관건이다. 한 쪽이 너무 강해도 힘들다. 또 거만하거나 지배적인 마음과 행동이나 본능에만 충실한 모습에 사로잡히지 않는다면 스스로 추구하는 것을 얻을 수 있을 것이다. 그리고 여성적이고 부드러운 부분을 밖으로 내보내지 않으면 타인을 다스리려는 성향이 강해져서 사람들이 함께 하려 하지 않아 하여 혼자인 고독한 존재가 될 수도 있다."
+            },
+            mint: {
+                1: "신선한 아이디어와 상상력이 풍부하다. 겉으론 침착하고 차분하며 까다로운 일들을 수월하게 처리해 나간다. 장애물이 있더라도 두려움 없이 냉철하게 대처 할 수도 있다. 결단력이 빠르고 행동이 확실하여 인기가 많다. 다른 사람들에게 목적과 방향을 반영시킬 수 있고, 뛰어난 통찰력과 능력을 지녔다. 그러나 자신의 능력을 너무 믿은 나머지 자칫하면 거만해 질 수 있고, 비현실적인 계획을 만들게 된다. 따라서 좀 더 자신을 돌아보고 계획도 현실적으로 만들어 나가야 할 줄 알아야 한다.",
+                2: "사람들과 조금 거리를 두어야 할 필요가 있다. 사람들이 자꾸 찾으므로 내적으로 자신을 생각해 보는 시간이 줄어들기 때문이다. 매우 예민한 감수성의 소유자이기 때문에 내적인 정화과정을 소홀히 할 경우 자신의 생활이 흐트러지기 때문이다. 자신만의 시간을 가지기가 어렵다면 나의 내적인 정화를 위한 사람을 만나는 것이 좋다.",
+                3: "변화를 위해 감당해야 하는 행동이 개인적인 변화를 만들어 주기 때문에 변화를 환영하지만 이 과정에서의 혼란과 두려움, 근심과 불편함을 뛰어넘어야 한다. 이것이 개인적인 성장과 개발을 위해 필요한 부분이다. 뛰어넘지 못한다면 계속 그 자리에서 머무를 수 밖에 없다. 한번 해보자라는 도전정신이 중요하고, 기회를 잡았다면 놓치지 말아야 한다."
             }
+        };
+
+        function toggleColor(color) {
+            const selectedColorIndex = selectedColors.indexOf(color);
+            if (selectedColorIndex === -1) {
+                selectedColors.push(color);
+            } else {
+                selectedColors.splice(selectedColorIndex, 1);
+            }
+            updateSelectedColors();
         }
-        
-        function reset() {
-            selectedColors = [];
-            document.getElementById('selected-color-1').style.backgroundColor = 'transparent';
-            document.getElementById('selected-color-2').style.backgroundColor = 'transparent';
-            document.getElementById('selected-color-3').style.backgroundColor = 'transparent';
+
+        function updateSelectedColors() {
+            const selectedColorsElement = document.getElementById('selected-colors');
+            selectedColorsElement.innerHTML = '';
+            selectedColors.forEach(color => {
+                const colorElement = document.createElement('div');
+                colorElement.textContent = color.toUpperCase();
+                selectedColorsElement.appendChild(colorElement);
+            });
+        }
+
+        function openModal(color) {
+            const modal = document.getElementById('colorModal');
+            const modalColorName = document.getElementById('modalColorName');
+            const modalColorDescription = document.getElementById('modalColorDescription');
+            modalColorName.textContent = color.toUpperCase() + "색";
+
+            // 색상별 개인성 설명을 모달에 표시
+            modalColorDescription.innerHTML = '';
+            for (let i = 1; i <= 3; i++) {
+                const description = document.createElement('p');
+                description.textContent = colorPersonality[color][i];
+                modalColorDescription.appendChild(description);
+            }
+
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('colorModal');
+            modal.style.display = 'none';
+        }
+
+        // 사용자가 모달 외부를 클릭하면 모달이 닫히도록 설정
+        window.onclick = function(event) {
+            const modal = document.getElementById('colorModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
         }
     </script>
 </body>
